@@ -178,7 +178,7 @@ if __name__ == '__main__':
     # to clean things up (e.g, unregister_advertisement())
     try:
         pi_veering.start_bt()
-    except KeyboardInterupt:
+    except KeyboardInterrupt:
         pi_veering.stop_bt()
 
 
