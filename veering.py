@@ -171,6 +171,7 @@ class ble:
 if __name__ == '__main__':
     # restarting the bluetooth service
     os.popen('sudo service bluetooth restart')
+    time.sleep(0.5)
     print('Start veering...')
     print(INTERSECTION_INFO)
     pi_veering = ble()
