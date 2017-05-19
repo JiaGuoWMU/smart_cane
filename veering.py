@@ -1,3 +1,14 @@
+'''
+Author: Jia Guo
+Email: jia.guo@wmich.edu
+Western Michigan University
+Date: May 19, 2017
+Description: 
+    1. Set up the Raspberry Pi as the BLE peripheral
+    2. Set up the Raspberry Pi as the GATT server
+    3. Advertise the veering direction to the BLE central (e.g., smartphone app)
+'''
+
 # Standard modules
 import os
 import dbus
@@ -21,7 +32,9 @@ from bluezero import GATT
 VEERING_SRVC = '6724672A-7AAA-44A5-85AC-CB9E3AAD7E6D'
 VEERING_CHRC = '2A6E'
 #VEERING_FMT_DSCP = '2904'
-INTERSECTION_INFO = 'You are now about to cross West Main & Drake, heading North Bound. Total number of lanes is 7. No median island. 4 leg intersection'
+INTERSECTION_INFO = 'You are now about to cross West Main & Drake,\
+                    heading North Bound. Total number of lanes is 7.\
+                    No median island. 4 leg intersection'
 LEFT = [dbus.Byte(0x4C),
         dbus.Byte(0x65),
         dbus.Byte(0x66),
@@ -52,8 +65,6 @@ def get_direction():
         direction = STRAIGHT
     print(direction)
     return direction
-#    cpu_temp = os.popen('vcgencmd measure_temp').readline()
-#    return float(cpu_temp.replace('temp=', '').replace("'C\n", ''))
 
 class VeeringChrc(localGATT.Characteristic):
     def __init__(self, service):
@@ -120,29 +131,14 @@ class ble:
     def __init__(self):
         self.bus = dbus.SystemBus()
         self.app = localGATT.Application()
-        self.srv = localGATT.Service(1, VEERING_SRVC, True)
         '''
             service_id: 1
             uuid: VEERING_SRVC
             primary: True
         '''
-        
-        
-        # customized starts
-#        self.charc = localGATT.Characteristic(1,
-#                                              VEERING_CHRC,
-#                                              self.srv,
-#                                              veering_value,
-#                                              False,
-#                                              ['read', 'notify'])
-
-        # customized stops
-        
-        
+        self.srv = localGATT.Service(1, VEERING_SRVC, True)
         self.charc = VeeringChrc(self.srv)
-
         self.charc.service = self.srv.path
-
 
         self.app.add_managed_object(self.srv)
         self.app.add_managed_object(self.charc)
@@ -151,15 +147,15 @@ class ble:
         self.srv_mng.register_application(self.app, {})
 
         self.dongle = adapter.Adapter(adapter.list_adapters()[0])
-        advert = advertisement.Advertisement(1, 'peripheral')
+        self.advert = advertisement.Advertisement(1, 'peripheral')
 
-        advert.service_UUIDs = [VEERING_SRVC]
+        self.advert.service_UUIDs = [VEERING_SRVC]
         # eddystone_data = tools.url_to_advert(WEB_BLINKT, 0x10, TX_POWER)
         # advert.service_data = {EDDYSTONE: eddystone_data}
         if not self.dongle.powered:
             self.dongle.powered = True
-        ad_manager = advertisement.AdvertisingManager(self.dongle.path)
-        ad_manager.register_advertisement(advert, {})
+        self.ad_manager = advertisement.AdvertisingManager(self.dongle.path)
+        self.ad_manager.register_advertisement(self.advert, {})
 
     def add_call_back(self, callback):
         self.charc.PropertiesChanged = callback
@@ -168,13 +164,22 @@ class ble:
         # self.light.StartNotify()
         tools.start_mainloop()
 
+    def stop_bt(self):
+        self.ad_manager.unregister_advertisement(self.advert)
+
 
 if __name__ == '__main__':
+    # restarting the bluetooth service
+    os.popen('sudo service bluetooth restart')
     print('Start veering...')
     print(INTERSECTION_INFO)
     pi_veering = ble()
-    pi_veering.start_bt()
-
+    # added a try:except: for KeyboardInterupt
+    # to clean things up (e.g, unregister_advertisement())
+    try:
+        pi_veering.start_bt()
+    except KeyboardInterupt:
+        pi_veering.stop_bt()
 
 
 
