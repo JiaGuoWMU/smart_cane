@@ -14,6 +14,7 @@ import os
 import dbus
 import random
 import time
+import SmartCaneApp as smart_cane
 
 try:
     from gi.repository import GObject
@@ -55,16 +56,25 @@ STRAIGHT = [dbus.Byte(0x53),
 
 # return the suggested direction based on the rfid and decision table
 def get_direction():
-    i = random.randint(0,2)
-    direction = []
-    if i == 0:
+    # i = random.randint(0,2)
+    # direction = []
+    # if i == 0:
+    #     direction = LEFT
+    # elif i == 1:
+    #     direction = RIGHT
+    # elif i == 2:
+    #     direction = STRAIGHT
+    # print(direction)
+    # return direction
+    action = smart_cane.main()
+    if action == "ACTION_VEER_LEFT"
         direction = LEFT
-    elif i == 1:
+    elif action == "ACTION_VEER_RIGHT"
         direction = RIGHT
-    elif i == 2:
+    elif action == "ACTION_KEEP_GOING"
         direction = STRAIGHT
-    print(direction)
     return direction
+
 
 class VeeringChrc(localGATT.Characteristic):
     def __init__(self, service):
