@@ -73,7 +73,7 @@ def get_direction():
         direction = RIGHT
     elif action == "ACTION_KEEP_GOING":
         direction = STRAIGHT
-    elif action == "ACTION_UNKNOWN"
+    elif action == "ACTION_UNKNOWN":
         direction = STRAIGHT
     return direction
 
