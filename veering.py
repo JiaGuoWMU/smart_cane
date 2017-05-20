@@ -67,11 +67,11 @@ def get_direction():
     # print(direction)
     # return direction
     action = smart_cane.main()
-    if action == "ACTION_VEER_LEFT"
+    if action == "ACTION_VEER_LEFT":
         direction = LEFT
-    elif action == "ACTION_VEER_RIGHT"
+    elif action == "ACTION_VEER_RIGHT":
         direction = RIGHT
-    elif action == "ACTION_KEEP_GOING"
+    elif action == "ACTION_KEEP_GOING":
         direction = STRAIGHT
     return direction
 
