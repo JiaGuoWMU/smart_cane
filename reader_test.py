@@ -1,4 +1,5 @@
-import SmartCaneApp
+import SmartCaneApp as app
 
-direction = SmartCaneApp()
-print direction
+while True:
+	direction = app.main()
+	print(direction)
