@@ -30,42 +30,25 @@ from bluezero import localGATT
 from bluezero import GATT
 
 # constants
-VEERING_SRVC = '6724672A-7AAA-44A5-85AC-CB9E3AAD7E6D'
-VEERING_CHRC = '2A6E'
+VEERING_SRVC        = '6724672A-7AAA-44A5-85AC-CB9E3AAD7E6D'
+VEERING_CHRC        = '2A6E'
 #VEERING_FMT_DSCP = '2904'
-INTERSECTION_INFO = 'You are now about to cross West Main & Drake,\
+INTERSECTION_INFO   = 'You are now about to cross West Main & Drake,\
                     heading North Bound. Total number of lanes is 7.\
                     No median island. 4 leg intersection'
-LEFT = [dbus.Byte(0x4C),
-        dbus.Byte(0x65),
-        dbus.Byte(0x66),
-        dbus.Byte(0x74)]
-RIGHT = [dbus.Byte(0x52),
-         dbus.Byte(0x69),
-         dbus.Byte(0x67),
-         dbus.Byte(0x68),
-         dbus.Byte(0x74)]
-STRAIGHT = [dbus.Byte(0x53),
-            dbus.Byte(0x74),
-            dbus.Byte(0x72),
-            dbus.Byte(0x61),
-            dbus.Byte(0x69),
-            dbus.Byte(0x67),
-            dbus.Byte(0x68),
-            dbus.Byte(0x74)]
+LEFT        = [dbus.Byte(0x4C),dbus.Byte(0x65),dbus.Byte(0x66),
+                dbus.Byte(0x74)]
+RIGHT       = [dbus.Byte(0x52),dbus.Byte(0x69),dbus.Byte(0x67),
+                dbus.Byte(0x68),dbus.Byte(0x74)]
+STRAIGHT    = [dbus.Byte(0x53),dbus.Byte(0x74),dbus.Byte(0x72),
+                dbus.Byte(0x61),dbus.Byte(0x69),dbus.Byte(0x67),
+                dbus.Byte(0x68),dbus.Byte(0x74)]
+UNKNOWN     = [dbus.Byte(0x55),dbus.Byte(0x6E),dbus.Byte(0x6B),
+                dbus.Byte(0x6E),dbus.Byte(0x6F),dbus.Byte(0x77),
+                dbus.Byte(0x6E),]
 
 # return the suggested direction based on the rfid and decision table
 def get_direction():
-    # i = random.randint(0,2)
-    # direction = []
-    # if i == 0:
-    #     direction = LEFT
-    # elif i == 1:
-    #     direction = RIGHT
-    # elif i == 2:
-    #     direction = STRAIGHT
-    # print(direction)
-    # return direction
     action = smart_cane.main()
     if action == "ACTION_VEER_LEFT":
         direction = LEFT
@@ -74,9 +57,8 @@ def get_direction():
     elif action == "ACTION_KEEP_GOING":
         direction = STRAIGHT
     elif action == "ACTION_UNKNOWN":
-        direction = STRAIGHT
+        direction = UNKNOWN
     return direction
-
 
 class VeeringChrc(localGATT.Characteristic):
     def __init__(self, service):
@@ -162,8 +144,6 @@ class ble:
         self.advert = advertisement.Advertisement(1, 'peripheral')
 
         self.advert.service_UUIDs = [VEERING_SRVC]
-        # eddystone_data = tools.url_to_advert(WEB_BLINKT, 0x10, TX_POWER)
-        # advert.service_data = {EDDYSTONE: eddystone_data}
         if not self.dongle.powered:
             self.dongle.powered = True
         self.ad_manager = advertisement.AdvertisingManager(self.dongle.path)
@@ -173,7 +153,6 @@ class ble:
         self.charc.PropertiesChanged = callback
 
     def start_bt(self):
-        # self.light.StartNotify()
         tools.start_mainloop()
 
     def stop_bt(self):
@@ -193,7 +172,4 @@ if __name__ == '__main__':
         pi_veering.start_bt()
     except KeyboardInterrupt:
         pi_veering.stop_bt()
-
-
-
 

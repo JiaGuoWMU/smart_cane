@@ -341,11 +341,11 @@ def main():
     # loop for ever and keep sending actions to phone until stop reading.
     while keep_reading_tags:
 
-        log("reading tags 30 times")
+        log("reading tags 10 times")
         # read tags 30 times
         global tag_rank
         tag_rank = 0
-        for i in range(30):
+        for i in range(10):
             tag_rank += tag_rank
             reader.read_tags()
 
