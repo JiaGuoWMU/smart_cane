@@ -32,10 +32,9 @@ from bluezero import GATT
 # constants
 VEERING_SRVC        = '6724672A-7AAA-44A5-85AC-CB9E3AAD7E6D'
 VEERING_CHRC        = '2A6E'
-#VEERING_FMT_DSCP = '2904'
-INTERSECTION_INFO   = 'You are now about to cross West Main & Drake,\
-                    heading North Bound. Total number of lanes is 7.\
-                    No median island. 4 leg intersection'
+INTERSECTION_INFO   = 'You are now about to cross West Main & Drake,\n' + 
+                    'heading North Bound. Total number of lanes is 7.\n' +
+                    'No median island. 4 leg intersection'
 LEFT        = [dbus.Byte(0x4C),dbus.Byte(0x65),dbus.Byte(0x66),
                 dbus.Byte(0x74)]
 RIGHT       = [dbus.Byte(0x52),dbus.Byte(0x69),dbus.Byte(0x67),
@@ -80,7 +79,6 @@ class VeeringChrc(localGATT.Characteristic):
         self.PropertiesChanged(constants.GATT_CHRC_IFACE,
                                {'Value': dbus.Array(reading)},
                                [])
-        time.sleep(5)
         print('Array value: ', reading)
         return self.props[constants.GATT_CHRC_IFACE]['Notifying']
 
