@@ -385,7 +385,7 @@ def main():
         bluetooth_communication.send_action_to_mobile(action_to_be_performed)
 
         reader.flush_list_of_tags()
-
+        return str(action_to_be_performed)
 
 if __name__ == '__main__':
     main()
