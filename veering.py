@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 '''
 Author: Jia Guo
 Email: jia.guo@wmich.edu
@@ -32,8 +33,8 @@ from bluezero import GATT
 # constants
 VEERING_SRVC        = '6724672A-7AAA-44A5-85AC-CB9E3AAD7E6D'
 VEERING_CHRC        = '2A6E'
-INTERSECTION_INFO   = 'You are now about to cross West Main & Drake,\n' + 
-                    'heading North Bound. Total number of lanes is 7.\n' +
+INTERSECTION_INFO   = 'You are now about to cross West Main & Drake,\n' + \
+                    'heading North Bound. Total number of lanes is 7.\n' + \
                     'No median island. 4 leg intersection'
 LEFT        = [dbus.Byte(0x4C),dbus.Byte(0x65),dbus.Byte(0x66),
                 dbus.Byte(0x74)]

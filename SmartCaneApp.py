@@ -38,7 +38,7 @@ class Constants:
     ACTION_KEEP_GOING = "ACTION_KEEP_GOING"
     ACTION_UNKNOWN = "ACTION_UNKNOWN"
 
-    TAGS_JSON_FILE_NAME = "tags.json"
+    TAGS_JSON_FILE_NAME = "/home/pi/jia/ble/tags.json"
     SERIAL_PORT_DEVICE_NAME = "/dev/ttyUSB0"
     SERIAL_PORT_BAUD_RATE = 115200
 
@@ -345,7 +345,7 @@ def main():
         # read tags 30 times
         global tag_rank
         tag_rank = 0
-        for i in range(10):
+        for i in range(5):
             tag_rank += tag_rank
             reader.read_tags()
 
