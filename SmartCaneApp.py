@@ -31,8 +31,12 @@ class Constants:
     LEFT_TAG = "LEFT_TAG"
     CENTER_TAG = "CENTER_TAG"
     RIGHT_TAG = "RIGHT_TAG"
+    START_TAG = "START_TAG"
+    FINISH_TAG = "FINISH_TAG"
     UNKNOWN_TAG = "UNKNOWN_TAG"
 
+    ACTION_START = "ACTION_START"
+    ACTION_FINISH = "ACTION_FINISH"
     ACTION_VEER_LEFT = "ACTION_VEER_LEFT"
     ACTION_VEER_RIGHT = "ACTION_VEER_RIGHT"
     ACTION_KEEP_GOING = "ACTION_KEEP_GOING"
@@ -46,6 +50,8 @@ class Constants:
     LEFT_TAG_JSON_FILE_KEY = "left_tags"
     RIGHT_TAG_JSON_FILE_KEY = "right_tags"
     CENTER_TAG_JSON_FILE_KEY = "center_tags"
+    START_TAG_JSON_FILE_KEY = "start_tags"
+    FINISH_TAG_JSON_FILE_KEY = "finish_tags"
 
     NUMBER_OF_LEFT_TAGS_THRESHOLD = 5
     NUMBER_OF_RIGHT_TAGS_THRESHOLD = 5
@@ -65,6 +71,8 @@ class VeeringAdjustmentClassifier:
         self.list_of_left_tags = list()
         self.list_of_right_tags = list()
         self.list_of_center_tags = list()
+        self.list_of_start_tags = list()
+        self.list_of_finish_tags = list()
 
         with open(Constants.TAGS_JSON_FILE_NAME) as data_file:
             tags_json = json.load(data_file)
@@ -75,6 +83,10 @@ class VeeringAdjustmentClassifier:
             self.list_of_right_tags.append(str(i))
         for i in tags_json[Constants.CENTER_TAG_JSON_FILE_KEY]:
             self.list_of_center_tags.append(str(i))
+        for i in tags_json[Constants.START_TAG_JSON_FILE_KEY]:
+            self.list_of_start_tags.append(str(i))
+        for i in tags_json[Constants.FINISH_TAG_JSON_FILE_KEY]:
+            self.list_of_finish_tags.append(str(i))
 
     def classify_tag(self, tag):
 
@@ -85,6 +97,10 @@ class VeeringAdjustmentClassifier:
             tag_location = Constants.RIGHT_TAG
         elif tag in self.list_of_center_tags:
             tag_location = Constants.CENTER_TAG
+        elif tag in self.list_of_start_tags:
+            tag_location = Constants.START_TAG
+        elif tag in self.list_of_finish_tags:
+            tag_location = Constants.FINISH_TAG
         else:
             tag_location = Constants.UNKNOWN_TAG
 
@@ -307,7 +323,6 @@ class VeeringAdjustmentDecisionTable:
     # this method is going to determine the appropriate action to be performed by the
     # blind pedestrian based on the decision_table
     def get_action_from_decision_table(self, left, center, right):
-
         action = Constants.ACTION_UNKNOWN
         for i in range(len(self.decision_table)):
             if self.decision_table[i][0] == left and self.decision_table[i][1] == center \
@@ -352,6 +367,8 @@ def main():
         list_of_found_left_tags = list()
         list_of_found_right_tags = list()
         list_of_found_center_tags = list()
+        list_of_found_start_tags = list()
+        list_of_found_finish_tags = list()
 
         # store each tag in its approprte list
         for i in reader.get_list_of_read_tags():
@@ -363,10 +380,16 @@ def main():
                 list_of_found_left_tags.append(i)
             elif i.location == Constants.RIGHT_TAG:
                 list_of_found_right_tags.append(i)
+            elif i.location == Constants.START_TAG:
+                list_of_found_start_tags.append(i)
+            elif i.location == Constants.FINISH_TAG:
+                list_of_found_finish_tags.append(i)                             
 
         left = 0
         right = 0
         center = 0
+        start = 0
+        finish = 0
 
         # TODO make these appropriate
         if len(list_of_found_center_tags) != 0:
@@ -375,11 +398,21 @@ def main():
             right = 1
         if len(list_of_found_left_tags) != 0:
             left = 1
+        if len(list_of_found_start_tags) != 0:
+            start = 1
+        if len(list_of_found_finish_tags) != 0:
+            finish = 1
 
-        log("left : " + str(left) + ", right : " + str(right) + ", center : " + str(center))
+        log("start : " + str(start) + ", finish : " + str(finish) + ", left : " + 
+            str(left) + ", right : " + str(right) + ", center : " + str(center))
 
-        # Calculate the appropriate action based on the read tags and the count.
-        action_to_be_performed = decision_table.get_action_from_decision_table(left, center, right)
+        if start == 1:
+            action_to_be_performed = ACTION_START
+        elif finish == 1:
+            action_to_be_performed = ACTION_FINISH
+        else
+            # Calculate the appropriate action based on the read tags and the count.
+            action_to_be_performed = decision_table.get_action_from_decision_table(left, center, right)
 
         # print("action : " + str(action_to_be_performed))
         bluetooth_communication.send_action_to_mobile(action_to_be_performed)

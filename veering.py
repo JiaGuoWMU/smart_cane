@@ -36,6 +36,11 @@ VEERING_CHRC        = '2A6E'
 INTERSECTION_INFO   = 'You are now about to cross West Main & Drake,\n' + \
                     'heading North Bound. Total number of lanes is 7.\n' + \
                     'No median island. 4 leg intersection'
+# TODO: Program the part below
+START       = [dbus.Byte(0x53),dbus.Byte(0x54),dbus.Byte(0x41),
+                dbus.Byte(0x52),dbus.Byte(0x54)]
+FINISH      = [dbus.Byte(0x46),dbus.Byte(0x49),dbus.Byte(0x4E),
+                dbus.Byte(0x49),dbus.Byte(0x53),dbus.Byte(0x48)]
 LEFT        = [dbus.Byte(0x4C),dbus.Byte(0x65),dbus.Byte(0x66),
                 dbus.Byte(0x74)]
 RIGHT       = [dbus.Byte(0x52),dbus.Byte(0x69),dbus.Byte(0x67),
@@ -50,7 +55,11 @@ UNKNOWN     = [dbus.Byte(0x55),dbus.Byte(0x6E),dbus.Byte(0x6B),
 # return the suggested direction based on the rfid and decision table
 def get_direction():
     action = smart_cane.main()
-    if action == "ACTION_VEER_LEFT":
+    if action == "ACTION_START":
+        direction = START
+    elif action == "ACTION_FINISH":
+        direction = FINISH
+    elif action == "ACTION_VEER_LEFT":
         direction = LEFT
     elif action == "ACTION_VEER_RIGHT":
         direction = RIGHT
