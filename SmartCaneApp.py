@@ -38,7 +38,7 @@ class Constants:
     ACTION_KEEP_GOING = "ACTION_KEEP_GOING"
     ACTION_UNKNOWN = "ACTION_UNKNOWN"
 
-    TAGS_JSON_FILE_NAME = "/home/pi/jia/ble/tags.json"
+    TAGS_JSON_FILE_NAME = "tags.json"
     SERIAL_PORT_DEVICE_NAME = "/dev/ttyUSB0"
     SERIAL_PORT_BAUD_RATE = 115200
 
@@ -345,7 +345,7 @@ def main():
         # read tags 30 times
         global tag_rank
         tag_rank = 0
-        for i in range(5):
+        for i in range(10):
             tag_rank += tag_rank
             reader.read_tags()
 
@@ -381,7 +381,7 @@ def main():
         # Calculate the appropriate action based on the read tags and the count.
         action_to_be_performed = decision_table.get_action_from_decision_table(left, center, right)
 
-        print("action : " + str(action_to_be_performed))
+        # print("action : " + str(action_to_be_performed))
         bluetooth_communication.send_action_to_mobile(action_to_be_performed)
 
         reader.flush_list_of_tags()

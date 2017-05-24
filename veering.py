@@ -72,22 +72,22 @@ class VeeringChrc(localGATT.Characteristic):
 
     def veering_cb(self):
         reading = get_direction()
-        print('Getting new veering',
-              reading,
-              self.props[constants.GATT_CHRC_IFACE]['Notifying'])
+        # print('Getting new veering',
+        #       reading,
+        #       self.props[constants.GATT_CHRC_IFACE]['Notifying'])
         self.props[constants.GATT_CHRC_IFACE]['Value'] = reading
 
         self.PropertiesChanged(constants.GATT_CHRC_IFACE,
                                {'Value': dbus.Array(reading)},
                                [])
-        print('Array value: ', reading)
+        # print('Array value: ', reading)
         return self.props[constants.GATT_CHRC_IFACE]['Notifying']
 
     def _update_direction_value(self):
         if not self.props[constants.GATT_CHRC_IFACE]['Notifying']:
             return
 
-        print('Starting timer event')
+        # print('Starting timer event')
         GObject.timeout_add(500, self.veering_cb)
 
     def ReadValue(self, options):
@@ -104,18 +104,18 @@ class VeeringChrc(localGATT.Characteristic):
 
     def StartNotify(self):
         if self.props[constants.GATT_CHRC_IFACE]['Notifying']:
-            print('Already notifying, nothing to do')
+            # print('Already notifying, nothing to do')
             return
-        print('Notifying on')
+        # print('Notifying on')
         self.props[constants.GATT_CHRC_IFACE]['Notifying'] = True
         self._update_direction_value()
 
     def StopNotify(self):
         if not self.props[constants.GATT_CHRC_IFACE]['Notifying']:
-            print('Not notifying, nothing to do')
+            # print('Not notifying, nothing to do')
             return
 
-        print('Notifying off')
+        # print('Notifying off')
         self.props[constants.GATT_CHRC_IFACE]['Notifying'] = False
         self._update_direction_value()
 
@@ -159,11 +159,13 @@ class ble:
 
 
 if __name__ == '__main__':
+    # put a 10 sec delay to wait required services to start at reboot
+    time.sleep(10)
     # restarting the bluetooth service
     os.popen('sudo service bluetooth restart')
-    time.sleep(0.5)
-    print('Start veering...')
-    print(INTERSECTION_INFO)
+    time.sleep(2)
+    # print('Start veering...')
+    # print(INTERSECTION_INFO)
     pi_veering = ble()
     # added a try:except: for KeyboardInterupt
     # to clean things up (e.g, unregister_advertisement())
