@@ -407,9 +407,9 @@ def main():
             str(left) + ", right : " + str(right) + ", center : " + str(center))
 
         if start == 1:
-            action_to_be_performed = ACTION_START
+            action_to_be_performed = Constants.ACTION_START
         elif finish == 1:
-            action_to_be_performed = ACTION_FINISH
+            action_to_be_performed = Constants.ACTION_FINISH
         else:
             # Calculate the appropriate action based on the read tags and the count.
             action_to_be_performed = decision_table.get_action_from_decision_table(left, center, right)
