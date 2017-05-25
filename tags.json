@@ -1,14 +1,3 @@
-/* 
- * Total tags: 19
- *  start_tags: 2
- *  finish_tags: 2
- *  left_tags: 3
- *  right_tags: 3
- *  soft_left_tags: 3
- *  soft_right_tags: 3
- *  center: 3
- */
-
 {
   "start_tags": [
     "-2-a0-ec-0-85-15-0-25-11-90-a5-7b",
@@ -39,11 +28,5 @@
     "-2-a0-dc-0-85-15-0-25-11-90-a5-70",
     "-2-a0-db-0-85-15-0-25-11-90-a5-96",
     "-2-a0-e4-0-85-15-0-25-11-90-a5-73"
-  ],
-  "soft_left_tags": [
-    
-  ],
-  "soft_right_tags": [
-    
   ]
 }

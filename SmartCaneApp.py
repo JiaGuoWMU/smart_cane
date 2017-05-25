@@ -357,7 +357,7 @@ def main():
     while keep_reading_tags:
 
         log("reading tags 10 times")
-        # read tags 30 times
+        # read tags 10 times
         global tag_rank
         tag_rank = 0
         for i in range(10):
@@ -410,7 +410,7 @@ def main():
             action_to_be_performed = ACTION_START
         elif finish == 1:
             action_to_be_performed = ACTION_FINISH
-        else
+        else:
             # Calculate the appropriate action based on the read tags and the count.
             action_to_be_performed = decision_table.get_action_from_decision_table(left, center, right)
 
