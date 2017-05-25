@@ -406,14 +406,16 @@ def main():
         log("start : " + str(start) + ", finish : " + str(finish) + ", left : " + 
             str(left) + ", right : " + str(right) + ", center : " + str(center))
 
-        if start == 1:
-            action_to_be_performed = Constants.ACTION_START
-        elif finish == 1:
-            action_to_be_performed = Constants.ACTION_FINISH
-        else:
-            # Calculate the appropriate action based on the read tags and the count.
-            action_to_be_performed = decision_table.get_action_from_decision_table(left, center, right)
+        
 
+        # if start == 1:
+        #     action_to_be_performed = Constants.ACTION_START
+        # elif finish == 1:
+        #     action_to_be_performed = Constants.ACTION_FINISH
+        # else:
+        #     # Calculate the appropriate action based on the read tags and the count.
+        #     action_to_be_performed = decision_table.get_action_from_decision_table(left, center, right)
+        action_to_be_performed = decision_table.get_action_from_decision_table(left, center, right)
         # print("action : " + str(action_to_be_performed))
         bluetooth_communication.send_action_to_mobile(action_to_be_performed)
 
