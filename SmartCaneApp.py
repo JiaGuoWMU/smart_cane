@@ -1,10 +1,9 @@
 """
-
-    This code is written by Hafez K.Irshaid, and updated by Jia Guo
-    Western Michigan University
-    Veering Adjustment Project for blind pedestrian.
+    Title: Veering Adjustment Project for Blind and Visually Impaired (BVI)
+    Author: Hafez K.Irshaid, Jia Guo
+    Email: hafezkm.irshaid@wmich.edu, jia.guo@wmich.edu
+    Institution: Western Michigan University
     Date: May 14, 2017
-
 """
 
 import math
@@ -26,6 +25,7 @@ def log(message):
 # This class contains some constants used in this code.
 class Constants:
     INVENTORY_READ_COMMAND = bytearray([0x43, 0x03, 0x01])
+    READ_FREQUENCY = 1
     TAG_FRAME_LENGTH = 22
 
     LEFT_TAG = "LEFT_TAG"
@@ -53,11 +53,9 @@ class Constants:
     START_TAG_JSON_FILE_KEY = "start_tags"
     FINISH_TAG_JSON_FILE_KEY = "finish_tags"
 
-    NUMBER_OF_LEFT_TAGS_THRESHOLD = 5
-    NUMBER_OF_RIGHT_TAGS_THRESHOLD = 5
-    NUMBER_OF_CENTER_TAGS_THRESHOLD = 5
+    NUMBER_OF_TAGS_THRESHOLD = 0
 
-    SLEEP_TIME = 0.1
+    SLEEP_TIME = 0.2
 
     def __init__(self):
         raise RuntimeError("Constants Class can't be instantiated")
@@ -347,8 +345,8 @@ class BluetoothCommuncation:
 
 
 def main():
-    reader = RFIDReader()
-    decision_table = VeeringAdjustmentDecisionTable()
+    reader = RFIDReader()  # instantiate an rfidreader object
+    decision_table = VeeringAdjustmentDecisionTable()  # instantiate a decision table object
     bluetooth_communication = BluetoothCommuncation("phone_name")
 
     global keep_reading_tags
@@ -360,7 +358,7 @@ def main():
         # read tags 10 times
         global tag_rank
         tag_rank = 0
-        for i in range(10):
+        for i in range(READ_FREQUENCY):
             tag_rank += tag_rank
             reader.read_tags()
 
@@ -392,21 +390,19 @@ def main():
         finish = 0
 
         # TODO make these appropriate
-        if len(list_of_found_center_tags) != 0:
+        if len(list_of_found_center_tags) != NUMBER_OF_TAGS_THRESHOLD:
             center = 1
-        if len(list_of_found_right_tags) != 0:
+        if len(list_of_found_right_tags) != NUMBER_OF_TAGS_THRESHOLD:
             right = 1
-        if len(list_of_found_left_tags) != 0:
+        if len(list_of_found_left_tags) != NUMBER_OF_TAGS_THRESHOLD:
             left = 1
-        if len(list_of_found_start_tags) != 0:
+        if len(list_of_found_start_tags) != NUMBER_OF_TAGS_THRESHOLD:
             start = 1
-        if len(list_of_found_finish_tags) != 0:
+        if len(list_of_found_finish_tags) != NUMBER_OF_TAGS_THRESHOLD:
             finish = 1
 
         log("start : " + str(start) + ", finish : " + str(finish) + ", left : " + 
             str(left) + ", right : " + str(right) + ", center : " + str(center))
-
-
 
         if start == 1:
             action_to_be_performed = Constants.ACTION_START
